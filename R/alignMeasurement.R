@@ -25,13 +25,37 @@
 #' the measurement and label columns from each CLAMS data list.
 #'
 #' @examples
-#' \dontrun{
+#' ## Assign and load a CLAMS data directory
+#' data.dir <- system.file("extdata", "Test", package="CLAMS")
+#' clams.dir <- file.path(data.dir, "Collection-2014-12-19")
+#' clams.coll <- loadClamsDir(clams.dir)
+#'
+#' ## Select columns and remove outliers
+#' clams.coll <- selectColumns(clams.coll, do.remove.outliers=TRUE)
+#'
+#' ## Append test conditions
+#' clams.coll <- appendColumn(clams.coll, "LIGHT", TRUE,
+#'                            start.str="06:00:00 AM", stop.str="06:00:00 PM", is.daily=TRUE)
+#' clams.coll <- appendColumn(clams.coll, "DARK", TRUE,
+#'                            start.str="06:00:00 PM", stop.str="06:00:00 AM", is.daily=TRUE)
+#' clams.coll <- appendColumn(clams.coll, "TEMP.30", TRUE,
+#'                            start.str="12/21/2014 6:00:00 AM", stop.str="12/22/2014 6:00:00 AM")
+#' clams.coll <- appendColumn(clams.coll, "TEMP.22", TRUE,
+#'                            start.str="12/24/2014 6:00:00 AM", stop.str="12/25/2014 6:00:00 AM")
+#'
+#' ## Align all VO2 measurments
 #' clams.msr <- alignMeasurement(clams.coll, "VO2")
+#' 
+#' ## Align VO2 measurments including only values during periods of light
 #' clams.msr <- alignMeasurement(clams.coll, "VO2", sel.name="LIGHT", sel.condition=TRUE)
+#'
+#' ## Align VO2 measurments including only values for which the
+#' ## corresponding XTOT measurement lies in the interval (250, 750)
 #' clams.msr <- alignMeasurement(clams.coll, "VO2", sel.name="XTOT", sel.condition=c(250, 750))
-#' clams.msr <- alignMeasurement(clams.coll, "VO2", "TEMP")
-#' clams.msr <- alignMeasurement(clams.coll, "VO2", c("LIGHT", "DARK"))
-#' }
+#'
+#' ## Align VO2 measurments also appending test conditions TEMP, LIGHT,
+#' ## DARK, TEMP.30, and TEMP.22
+#' clams.msr <- alignMeasurement(clams.coll, "VO2", c("LIGHT", "DARK", "TEMP.30", "TEMP.22"))
 alignMeasurement <- function(clams.list, msr.name, lbl.names=NULL, sel.name=NULL, sel.condition=NULL) {
   ## Copyright (c) 2014 Katherine B. and Raymond A. LeClair
   ## 

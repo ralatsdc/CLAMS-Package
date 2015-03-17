@@ -1,4 +1,4 @@
-clams.data.a <- loadClamsFile(file.path(data.dir, "Collection/2013-01-15.0101.CSV"))
+clams.data.a <- loadClamsFile(file.path(data.dir, "Collection-2013-01-15/2013-01-15.0101.CSV"))
 clams.data.b <- selectColumns(clams.data.a)
 
 .setup <- function () {
@@ -131,7 +131,7 @@ test.AppendsColumn <- function () {
 }
 
 test.ReturnsClamsDataOrCollection <- function () {
-  clams.coll.a <- loadClamsDir(file.path(data.dir, "Collection"))
+  clams.coll.a <- loadClamsDir(file.path(data.dir, "Collection-2013-01-15"))
   clams.coll.b <- selectColumns(clams.coll.a)
   clams.coll.c <- appendColumn(clams.coll.b, "light", TRUE, start.str="06:00:00 AM", stop.str="06:00:00 PM", is.daily=TRUE)
   checkEquals(names(clams.coll.c), c("2013-01-15.0101.CSV",

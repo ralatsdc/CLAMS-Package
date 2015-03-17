@@ -51,19 +51,37 @@ average. By default, measurements are filtered. Optionally plots
 error bars. By default, error bars are not plotted.
 }
 \examples{
-\dontrun{
+##  Assign and load a CLAMS data directory
+data.dir <- system.file("extdata", "Test", package="CLAMS")
+clams.dir <- file.path(data.dir, "Collection-2014-12-19")
+clams.coll <- loadClamsDir(clams.dir)
+
+## Select columns and remove outliers
+clams.coll <- selectColumns(clams.coll, do.remove.outliers=TRUE)
+
+## Append test conditions
+clams.coll <- appendColumn(clams.coll, "LIGHT", TRUE,
+                           start.str="06:00:00 AM", stop.str="06:00:00 PM", is.daily=TRUE)
+clams.coll <- appendColumn(clams.coll, "DARK", TRUE,
+                           start.str="06:00:00 PM", stop.str="06:00:00 AM", is.daily=TRUE)
+clams.coll <- appendColumn(clams.coll, "TEMP.30", TRUE,
+                           start.str="12/21/2014 6:00:00 AM", stop.str="12/22/2014 6:00:00 AM")
+clams.coll <- appendColumn(clams.coll, "TEMP.22", TRUE,
+                           start.str="12/24/2014 6:00:00 AM", stop.str="12/25/2014 6:00:00 AM")
+
+## Align oxygen consumption measurments for each specimen and append
+## test conditions
+clams.msr <- alignMeasurement(clams.coll, "VO2", c("LIGHT", "DARK", "TEMP.30", "TEMP.22"))
+
+## Plot aligned measurmeents, aggregating and labeling named columns,
+## labeling test conditions, filtering measurements, and plotting
+## error bars
 plotMeasurement(clams.msr, "Oxygen Consumption, ml/kg/hr", "VO2.pdf",
-                agg.names=list(c("WT1", "WT2"), c("KO1", "KO2")),
-                agg.labels=c("WT", "KO"),
-                con.names=c("TEMP.23", "TEMP.04"),
-                con.labels=expression(paste("23", degree, "C"), paste("4", degree, "C")),
+                agg.names=list(c("CRE.NEG.NH", "CRE.NEG.HL", "CRE.NEG.RL"),
+                               c("CRE.POS.HR.2", "CRE.POS.HR.4", "CRE.POS.2R")),
+                agg.labels=c("CRE.NEG", "CRE.POS"),
+                con.names=c("TEMP.30", "TEMP.22"),
+                con.labels=expression(paste("30", degree, "C"), paste("22", degree, "C")),
                 do.filter=TRUE, do.error.bars=TRUE)
-plotMeasurement(clams.msr, "Oxygen Consumption, ml/kg/hr", "VO2.pdf",
-                agg.names=list(c("WT1", "WT2"), c("KO1", "KO2")),
-                agg.labels=c("WT", "KO"), agg.function=sum,
-                con.names=c("TEMP.23", "TEMP.04"),
-                con.labels=expression(paste("23", degree, "C"), paste("4", degree, "C")),
-                do.filter=TRUE, do.error.bars=TRUE)
-}
 }
 

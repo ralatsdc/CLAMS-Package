@@ -13,14 +13,14 @@ test.LoadsEmptyFile <- function () {
 
 test.LoadsFileWithoutMetaData <- function () {
   clams.data.a <- loadClamsFile(file.path(data.dir, "File.Without.Meta.Values.CSV"))
-  clams.data.b <- loadClamsFile(file.path(data.dir, "Collection/2013-01-15.0101.CSV"))
+  clams.data.b <- loadClamsFile(file.path(data.dir, "Collection-2013-01-15/2013-01-15.0101.CSV"))
   checkEquals(clams.data.a$meta.data, list())
   checkEquals(clams.data.b$measurements, clams.data.b$measurements)
 }
 
 test.LoadsFileWithoutMeasurments <- function () {
   clams.data.a <- loadClamsFile(file.path(data.dir, "File.Without.Data.Mode.CSV"))
-  clams.data.b <- loadClamsFile(file.path(data.dir, "Collection/2013-01-15.0101.CSV"))
+  clams.data.b <- loadClamsFile(file.path(data.dir, "Collection-2013-01-15/2013-01-15.0101.CSV"))
   checkEquals(clams.data.a$meta.data, clams.data.b$meta.data)
   checkEquals(clams.data.a$measurements, data.frame())
   checkEquals(clams.data.a$meta.data, clams.data.b$meta.data)
@@ -35,7 +35,7 @@ test.LoadsFileWithoutMeasurments <- function () {
 }
 
 test.LoadsFile <- function () {
-  clams.data <- loadClamsFile(file.path(data.dir, "Collection/2013-01-15.0101.CSV"))
+  clams.data <- loadClamsFile(file.path(data.dir, "Collection-2013-01-15/2013-01-15.0101.CSV"))
 
   checkEquals(clams.data$meta.data$csv.file.creation, "3/27/2014 1:26:31 PM")
   checkEquals(clams.data$meta.data$experiment.start, "1/15/2013 5:34:05 PM")

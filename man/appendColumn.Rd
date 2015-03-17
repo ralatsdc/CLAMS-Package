@@ -50,8 +50,14 @@ By default, the time interval does not recur daily. If
 must contain only time of day, and not date.
 }
 \examples{
-\dontrun{
-clams.coll <- appendColumn(clams.coll, "light", TRUE, start.str="06:00:00 AM", stop.str="06:00:00 PM", is.daily=TRUE)
-}
+## Assign and load a CLAMS data directory, and select default columns
+data.dir <- system.file("extdata", "Test", package="CLAMS")
+clams.dir <- file.path(data.dir, "Collection-2013-01-15")
+clams.coll <- loadClamsDir(clams.dir)
+clams.coll <- selectColumns(clams.coll)
+
+## Append a column indicating daily periods of illumination
+clams.coll <- appendColumn(clams.coll, "light", TRUE,
+                           start.str="06:00:00 AM", stop.str="06:00:00 PM", is.daily=TRUE)
 }
 

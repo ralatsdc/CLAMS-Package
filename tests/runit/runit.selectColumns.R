@@ -1,4 +1,4 @@
-clams.data.a <- loadClamsFile(file.path(data.dir, "Collection/2013-01-15.0101.CSV"))
+clams.data.a <- loadClamsFile(file.path(data.dir, "Collection-2013-01-15/2013-01-15.0101.CSV"))
 
 .setup <- function () {
 }
@@ -22,7 +22,7 @@ test.SelectsAll <- function () {
 }  
 
 test.FailsWhenSelectingAbsentColumn <- function () {
-  clams.data <- loadClamsFile(file.path(data.dir, "Collection/2013-01-15.0101.CSV"))
+  clams.data <- loadClamsFile(file.path(data.dir, "Collection-2013-01-15/2013-01-15.0101.CSV"))
   checkException(select(clams.data, c("Col.Name.Does.Not.Exist")))
 }
 
@@ -115,7 +115,7 @@ test.RemovesOutliers <- function () {
 }
 
 test.ReturnsClamsDataOrCollection <- function () {
-  clams.coll.a <- loadClamsDir(file.path(data.dir, "Collection"))
+  clams.coll.a <- loadClamsDir(file.path(data.dir, "Collection-2013-01-15"))
   clams.coll.b <- selectColumns(clams.coll.a)
   checkEquals(names(clams.coll.b), c("2013-01-15.0101.CSV",
                                      "2013-01-15.0102.CSV",

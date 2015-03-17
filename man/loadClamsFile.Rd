@@ -31,8 +31,11 @@ example, lines which contain three consecutive measurements which
 are reported as zero to three significant digits are rejected.
 }
 \examples{
-\dontrun{
-clams.data <- loadClamsFile("./Data/2013-01-15.0101/2013-01-15.0101.CSV")
-}
+## Assign a CLAMS data file
+data.dir <- system.file("extdata", "Test", package="CLAMS")
+clams.file <- file.path(data.dir, "Collection-2013-01-15", "2013-01-15.0101.CSV")
+
+## Load a CLAMS data file
+clams.data <- loadClamsFile(clams.file)
 }
 

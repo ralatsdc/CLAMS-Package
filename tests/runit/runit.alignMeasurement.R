@@ -2,17 +2,17 @@
 }
 
 test.FailsWithInvalidInput <- function () {
-  clams.coll.a <- loadClamsDir(file.path(data.dir, "Collection"))
+  clams.coll.a <- loadClamsDir(file.path(data.dir, "Collection-2013-01-15"))
   clams.coll.b <- selectColumns(clams.coll.a)
   clams.coll.c <- appendColumn(clams.coll.b, "light", TRUE, start.str="06:00:00 AM", stop.str="06:00:00 PM", is.daily=TRUE)
   checkException(alignMeasurement(clams.coll.c, c("VO2", "VCO2")))
   checkException(alignMeasurement(clams.coll.c, 0.0))
   checkException(alignMeasurement(clams.coll.c, "VO2", lbl.names=0.0))
-  checkException(alignMeasurement(clams.coll.c, "VO2", sel.names="V02"))
-  checkException(alignMeasurement(clams.coll.c, "VO2", sel.names=c("V02", "VC02"), sel.condition=c(0.0, 1.0)))
+  checkException(alignMeasurement(clams.coll.c, "VO2", sel.names="VO2"))
+  checkException(alignMeasurement(clams.coll.c, "VO2", sel.names=c("VO2", "VCO2"), sel.condition=c(0.0, 1.0)))
   checkException(alignMeasurement(clams.coll.c, "VO2", sel.names=0.0, sel.condition=c(0.0, 1.0)))
   checkException(alignMeasurement(clams.coll.c, "VO2", sel.condition=c(0.0, 1.0)))
-  checkException(alignMeasurement(clams.coll.c, "VO2", sel.names="V02", sel.condition=c(0.0, 1.0, 2.0)))
+  checkException(alignMeasurement(clams.coll.c, "VO2", sel.names="VO2", sel.condition=c(0.0, 1.0, 2.0)))
 }
 
 test.AlignsMeasurments <- function () {

@@ -11,7 +11,7 @@ test.LoadsEmptyDir <- function () {
 }
 
 test.LoadsDir <- function () {
-  clams.coll <- loadClamsDir(file.path(data.dir, "Collection"))
+  clams.coll <- loadClamsDir(file.path(data.dir, "Collection-2013-01-15"))
 
   checkEquals(names(clams.coll), c("2013-01-15.0101.CSV",
                                    "2013-01-15.0102.CSV",
@@ -20,10 +20,10 @@ test.LoadsDir <- function () {
                                    "2013-01-15.0105.CSV",
                                    "2013-01-15.0106.CSV"))
                                    
-  clams.data <- loadClamsFile(file.path(data.dir, "Collection/2013-01-15.0101.CSV"))
+  clams.data <- loadClamsFile(file.path(data.dir, "Collection-2013-01-15/2013-01-15.0101.CSV"))
   checkEquals(clams.coll[["2013-01-15.0101.CSV"]], clams.data)
   
-  clams.data <- loadClamsFile(file.path(data.dir, "Collection/2013-01-15.0106.CSV"))
+  clams.data <- loadClamsFile(file.path(data.dir, "Collection-2013-01-15/2013-01-15.0106.CSV"))
   checkEquals(clams.coll[["2013-01-15.0106.CSV"]], clams.data)
 }
 

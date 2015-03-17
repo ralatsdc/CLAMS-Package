@@ -24,12 +24,14 @@
   Author: Katherine and Raymond LeClair\cr
   Maintainer: Raymond LeClair <raymond.leclair@gmail.com>
 }
-\references{
-}
+% \references{
+% }
 \keyword{package}
-\seealso{
-}
+% \seealso{
+% }
 \examples{
 % TODO: Complete
 % ~~ simple examples of the most important functions ~~
+clams.file <- system.file("extdata", "Test", "Collection", "2013-01-15.0101.CSV", package = "CLAMS")
+clams.data <- loadClamsFile(clams.file)
 }

@@ -22,8 +22,11 @@ Loads a collection of CLAMS data files.
 Loads each CLAMS data file contained in a directory.
 }
 \examples{
-\dontrun{
-clams.coll <- loadClamsDir("./Data/2013-01-15.0101")
-}
+## Assign a CLAMS data directory
+data.dir <- system.file("extdata", "Test", package="CLAMS")
+clams.dir <- file.path(data.dir, "Collection-2013-01-15")
+
+## Load a CLAMS data directory
+clams.coll <- loadClamsDir(clams.dir)
 }
 

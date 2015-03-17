@@ -5,7 +5,8 @@ Version: 2.2-3
 Date: 2015-03-14
 Author: Katherine and Raymond LeClair
 Maintainer: Raymond LeClair <raymond.leclair@gmail.com>
+Suggests: RUnit
 Description: Provides functions for analyzing data produced by the
   Columbus Instruments Comprehensive Lab Animal Monitoring System
   (CLAMS).
-License: MIT + file LICENCE
+License: MIT + file LICENSE

@@ -34,16 +34,27 @@ default selection of columns includes: "INTERVAL", "CHAN",
 By default outliers are not removed. If \code{do.remove.outliers}
 is \code{TRUE}, outliers, including non-physical values, and values
 greater than three standard deviations from the mean, are
-removed. Non-physical values include values of V02, VC02, and HEAT
+removed. Non-physical values include values of VO2, VCO2, and HEAT
 less than or equal to zero, RER less than 0.5 or more than 1.2, and
 XTOT and XAMB less than zero.
 }
 \examples{
-\dontrun{
+## Assign and load a CLAMS data file
+data.dir <- system.file("extdata", "Test", package="CLAMS")
+clams.file <- file.path(data.dir, "Collection-2013-01-15", "2013-01-15.0101.CSV")
+clams.data <- loadClamsFile(clams.file)
+
+## Select default columns
 clams.data <- selectColumns(clams.data)
+
+## Assign and load a CLAMS data directory
+clams.dir <- file.path(data.dir, "Collection-2013-01-15")
+clams.coll <- loadClamsDir(clams.dir)
+
+## Select default columns, a single column, and a single column with
+## outliers removed
 clams.coll <- selectColumns(clams.coll)
-clams.coll <- selectColumns(clams.coll, col.names=c("V02"))
-clams.coll <- selectColumns(clams.coll, col.names=c("V02"), do.remove.outliers=TRUE)
-}
+clams.coll <- selectColumns(clams.coll, col.names=c("VO2"))
+clams.coll <- selectColumns(clams.coll, col.names=c("VO2"), do.remove.outliers=TRUE)
 }
 
