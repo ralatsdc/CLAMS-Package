@@ -30,7 +30,9 @@
 #'
 #' ## Load a CLAMS data file
 #' clams.data <- loadClamsFile(clams.file)
+
 loadClamsFile <- function(input.file) {
+
   ## Copyright (c) 2014 Katherine B. and Raymond A. LeClair
   ## 
   ## This program can be redistributed and/or modified under the terms

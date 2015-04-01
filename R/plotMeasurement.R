@@ -65,8 +65,10 @@
 #'                 con.names=c("TEMP.30", "TEMP.22"),
 #'                 con.labels=expression(paste("30", degree, "C"), paste("22", degree, "C")),
 #'                 do.filter=TRUE, do.error.bars=TRUE)
+
 plotMeasurement <- function(clams.msr, msr.label, output.file, agg.names, agg.labels, agg.function=mean,
                             con.names=NULL, con.labels=NULL, do.filter=TRUE, do.error.bars=FALSE) {
+
   ## Copyright (c) 2014 Katherine B. and Raymond A. LeClair
   ## 
   ## This program can be redistributed and/or modified under the terms

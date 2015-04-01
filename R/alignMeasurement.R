@@ -53,10 +53,11 @@
 #' ## corresponding XTOT measurement lies in the interval (250, 750)
 #' clams.msr <- alignMeasurement(clams.coll, "VO2", sel.name="XTOT", sel.condition=c(250, 750))
 #'
-#' ## Align VO2 measurments also appending test conditions TEMP, LIGHT,
-#' ## DARK, TEMP.30, and TEMP.22
-#' clams.msr <- alignMeasurement(clams.coll, "VO2", c("LIGHT", "DARK", "TEMP.30", "TEMP.22"))
+#' ## Align VO2 measurments also appending test condition LIGHT
+#' clams.msr <- alignMeasurement(clams.coll, "VO2", c("LIGHT"))
+
 alignMeasurement <- function(clams.list, msr.name, lbl.names=NULL, sel.name=NULL, sel.condition=NULL) {
+
   ## Copyright (c) 2014 Katherine B. and Raymond A. LeClair
   ## 
   ## This program can be redistributed and/or modified under the terms
@@ -184,7 +185,7 @@ alignMeasurement <- function(clams.list, msr.name, lbl.names=NULL, sel.name=NULL
     n.msr <- length(msr.value)
     i.com <- 1
     for (i.msr in seq(1, n.msr)) {
-      while(msr.time[i.msr] >= com.time[i.com] && i.com <= n.com) {
+      while (i.com <= n.com && msr.time[i.msr] >= com.time[i.com]) {
         i.com <- i.com + 1
       }
       i.com <- i.com - 1

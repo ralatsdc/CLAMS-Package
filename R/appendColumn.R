@@ -46,7 +46,9 @@
 #' ## Append a column indicating daily periods of illumination
 #' clams.coll <- appendColumn(clams.coll, "light", TRUE,
 #'                            start.str="06:00:00 AM", stop.str="06:00:00 PM", is.daily=TRUE)
+
 appendColumn <- function(clams.list, col.name, col.value, start.str="", stop.str="", is.daily=FALSE) {
+
   ## Copyright (c) 2014 Katherine B. and Raymond A. LeClair
   ## 
   ## This program can be redistributed and/or modified under the terms

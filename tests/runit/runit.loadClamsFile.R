@@ -15,7 +15,7 @@ test.LoadsFileWithoutMetaData <- function () {
   clams.data.a <- loadClamsFile(file.path(data.dir, "File.Without.Meta.Values.CSV"))
   clams.data.b <- loadClamsFile(file.path(data.dir, "Collection-2013-01-15/2013-01-15.0101.CSV"))
   checkEquals(clams.data.a$meta.data, list())
-  checkEquals(clams.data.b$measurements, clams.data.b$measurements)
+  checkEquals(clams.data.a$measurements, clams.data.b$measurements)
 }
 
 test.LoadsFileWithoutMeasurments <- function () {
@@ -23,7 +23,6 @@ test.LoadsFileWithoutMeasurments <- function () {
   clams.data.b <- loadClamsFile(file.path(data.dir, "Collection-2013-01-15/2013-01-15.0101.CSV"))
   checkEquals(clams.data.a$meta.data, clams.data.b$meta.data)
   checkEquals(clams.data.a$measurements, data.frame())
-  checkEquals(clams.data.a$meta.data, clams.data.b$meta.data)
 
   clams.data.a <- loadClamsFile(file.path(data.dir, "File.Without.Data.Values.1.CSV"))
   checkEquals(nrow(clams.data.a$measurements), 0)

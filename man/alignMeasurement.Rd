@@ -65,8 +65,7 @@ clams.msr <- alignMeasurement(clams.coll, "VO2", sel.name="LIGHT", sel.condition
 ## corresponding XTOT measurement lies in the interval (250, 750)
 clams.msr <- alignMeasurement(clams.coll, "VO2", sel.name="XTOT", sel.condition=c(250, 750))
 
-## Align VO2 measurments also appending test conditions TEMP, LIGHT,
-## DARK, TEMP.30, and TEMP.22
-clams.msr <- alignMeasurement(clams.coll, "VO2", c("LIGHT", "DARK", "TEMP.30", "TEMP.22"))
+## Align VO2 measurments also appending test condition LIGHT
+clams.msr <- alignMeasurement(clams.coll, "VO2", c("LIGHT"))
 }
 

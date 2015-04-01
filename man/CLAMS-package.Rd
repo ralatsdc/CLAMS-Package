@@ -14,8 +14,8 @@
   \tabular{ll}{
     Package: \tab CLAMS\cr
     Type: \tab Package\cr
-    Version: \tab 2.2-3\cr
-    Date: \tab 2015-03-14\cr
+    Version: \tab 2.4-0\cr
+    Date: \tab 2015-04-01\cr
     License: \tab MIT + file LICENSE\cr
   }
   The Columbus Instruments Comprehensive Lab Animal Monitoring System
@@ -88,7 +88,7 @@
 % \seealso{
 % }
 \examples{
-##  Assign and load a CLAMS data directory
+## Load measurments for all specimens
 data.dir <- system.file("extdata", "Test", package="CLAMS")
 clams.dir <- file.path(data.dir, "Collection-2014-12-19")
 clams.coll <- loadClamsDir(clams.dir)
@@ -106,16 +106,19 @@ clams.coll <- appendColumn(clams.coll, "TEMP.30", TRUE,
 clams.coll <- appendColumn(clams.coll, "TEMP.22", TRUE,
                            start.str="12/24/2014 6:00:00 AM", stop.str="12/25/2014 6:00:00 AM")
 
-## Align oxygen consumption measurments for each specimen and append
-## test conditions
+## Align and plot oxygen consumption for each specimen
 clams.msr <- alignMeasurement(clams.coll, "VO2", c("LIGHT", "DARK", "TEMP.30", "TEMP.22"))
-
-## Plot aligned measurmeents, aggregating and labeling named columns,
-## labeling test conditions, filtering measurements, and plotting
-## error bars
 plotMeasurement(clams.msr, "Oxygen Consumption, ml/kg/hr", "VO2.pdf",
-                agg.names=list(c("CRE.NEG.NH", "CRE.NEG.HL", "CRE.NEG.RL"),
-                               c("CRE.POS.HR.2", "CRE.POS.HR.4", "CRE.POS.2R")),
+                agg.names=list(c("CRE.NEG.NH", "CRE.NEG.HL", "CRE.NEG.RL"), c("CRE.POS.HR.2", "CRE.POS.HR.4", "CRE.POS.2R")),
+                agg.labels=c("CRE.NEG", "CRE.POS"),
+                con.names=c("TEMP.30", "TEMP.22"),
+                con.labels=expression(paste("30", degree, "C"), paste("22", degree, "C")),
+                do.filter=TRUE, do.error.bars=TRUE)
+
+## Align and plot respiratory exchange ratio for each specimen
+clams.msr <- alignMeasurement(clams.coll, "RER", c("LIGHT", "DARK", "TEMP.30", "TEMP.22"))
+plotMeasurement(clams.msr, "Respiratory Exchange Ratio, RER", "RER.pdf",
+                agg.names=list(c("CRE.NEG.NH", "CRE.NEG.HL", "CRE.NEG.RL"), c("CRE.POS.HR.2", "CRE.POS.HR.4", "CRE.POS.2R")),
                 agg.labels=c("CRE.NEG", "CRE.POS"),
                 con.names=c("TEMP.30", "TEMP.22"),
                 con.labels=expression(paste("30", degree, "C"), paste("22", degree, "C")),

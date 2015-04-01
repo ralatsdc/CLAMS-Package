@@ -21,7 +21,9 @@
 #'
 #' ## Load a CLAMS data directory
 #' clams.coll <- loadClamsDir(clams.dir)
+
 loadClamsDir <- function(data.dir) {
+
   ## Copyright (c) 2014 Katherine B. and Raymond A. LeClair
   ## 
   ## This program can be redistributed and/or modified under the terms
