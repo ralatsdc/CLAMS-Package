@@ -65,9 +65,6 @@ into R, selecting measurements for analysis, appending test
 conditions, aligning measurements between chambers or data collection
 experiments, and plotting aligned measurements.
 
-Author: Katherine and Raymond LeClair. Maintainer: Raymond LeClair
-<raymond.leclair@gmail.com>
-
 Installation
 ------------
 
@@ -76,3 +73,9 @@ Installation
 3. Click the `Download ZIP` button, save the zip file to your local
    machine, then extract
 4. Open the project in RStudio and select `Build > Build & Reload`
+
+Author and Maintainer
+---------------------
+
+Written by Katherine and Raymond LeClair. Maintained by Raymond LeClair
+(raymond.leclair@gmail.com).
