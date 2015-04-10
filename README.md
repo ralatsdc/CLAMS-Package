@@ -71,8 +71,8 @@ Author: Katherine and Raymond LeClair. Maintainer: Raymond LeClair
 Installation
 ------------
 
-# In your browser, navigate to https://github.com/ralatsdc/CLAMS-Package
-# Select the most current release branch from the `branch` drop-down
-# Click the `Download ZIP` button, save the zip file to your local
-  machine, then extract
-# Open the project in RStudio and select `Build > Build & Reload`
+1. In your browser, navigate to https://github.com/ralatsdc/CLAMS-Package
+2. Select the most current release branch from the `branch` drop-down
+3. Click the `Download ZIP` button, save the zip file to your local
+   machine, then extract
+4. Open the project in RStudio and select `Build > Build & Reload`
