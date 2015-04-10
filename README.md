@@ -1,9 +1,9 @@
 CLAMS-Package
 =============
 
-Provides R functions to simplify the analysis of data collected using
-the Columbus Instruments Comprehensive Lab Animal Monitoring System
-CLAMS)
+Provides an R Package which includes functions to simplify the
+analysis of data collected using the Columbus Instruments
+Comprehensive Lab Animal Monitoring System (CLAMS)
 
 Details
 -------
@@ -65,8 +65,14 @@ into R, selecting measurements for analysis, appending test
 conditions, aligning measurements between chambers or data collection
 experiments, and plotting aligned measurements.
 
-Author: Katherine and Raymond LeClair
-Maintainer: Raymond LeClair <raymond.leclair@gmail.com>
+Author: Katherine and Raymond LeClair. Maintainer: Raymond LeClair
+<raymond.leclair@gmail.com>
 
 Installation
 ------------
+
+# In your browser, navigate to https://github.com/ralatsdc/CLAMS-Package
+# Select the most current release branch from the `branch` drop-down
+# Click the `Download ZIP` button, save the zip file to your local
+  machine, then extract
+# Open the project in RStudio and select `Build > Build & Reload`
