@@ -68,11 +68,10 @@ experiments, and plotting aligned measurements.
 Installation
 ------------
 
-1. In your browser, navigate to https://github.com/ralatsdc/CLAMS-Package
-2. Select the most current release branch from the `branch` drop-down
-3. Click the `Download ZIP` button, save the zip file to your local
+1. Select the most current release branch from the `branch` drop-down
+2. Click the `Download ZIP` button, save the zip file to your local
    machine, then extract
-4. Open the project in RStudio and select `Build > Build & Reload`
+3. Open the project in RStudio and select `Build > Build & Reload`
 
 Author and Maintainer
 ---------------------
