@@ -3,3 +3,4 @@
 .RData
 inst/extdata/Test/File.Does.Not.Exist_Extracted.csv
 inst/extdata/Test/File.Does.Not.Exist_Rejected.csv
+*.pdf
