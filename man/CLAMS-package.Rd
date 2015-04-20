@@ -113,7 +113,7 @@ plotMeasurement(clams.msr, "Oxygen Consumption, ml/kg/hr", "VO2.pdf",
                 agg.labels=c("CRE.NEG", "CRE.POS"),
                 con.names=c("TEMP.30", "TEMP.22"),
                 con.labels=expression(paste("30", degree, "C"), paste("22", degree, "C")),
-                do.filter=TRUE, do.error.bars=TRUE)
+                do.filter="m", do.error.bars=TRUE)
 
 ## Align and plot respiratory exchange ratio for each specimen
 clams.msr <- alignMeasurement(clams.coll, "RER", c("LIGHT", "DARK", "TEMP.30", "TEMP.22"))
@@ -122,5 +122,5 @@ plotMeasurement(clams.msr, "Respiratory Exchange Ratio, RER", "RER.pdf",
                 agg.labels=c("CRE.NEG", "CRE.POS"),
                 con.names=c("TEMP.30", "TEMP.22"),
                 con.labels=expression(paste("30", degree, "C"), paste("22", degree, "C")),
-                do.filter=TRUE, do.error.bars=TRUE)
+                do.filter="m", do.error.bars=TRUE)
 }
