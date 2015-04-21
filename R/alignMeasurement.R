@@ -33,15 +33,9 @@
 #' ## Select columns and remove outliers
 #' clams.coll <- selectColumns(clams.coll, do.remove.outliers=TRUE)
 #'
-#' ## Append test conditions
+#' ## Append a column indicating daily periods of illumination
 #' clams.coll <- appendColumn(clams.coll, "LIGHT", TRUE,
 #'                            start.str="06:00:00 AM", stop.str="06:00:00 PM", is.daily=TRUE)
-#' clams.coll <- appendColumn(clams.coll, "DARK", TRUE,
-#'                            start.str="06:00:00 PM", stop.str="06:00:00 AM", is.daily=TRUE)
-#' clams.coll <- appendColumn(clams.coll, "TEMP.30", TRUE,
-#'                            start.str="12/21/2014 6:00:00 AM", stop.str="12/22/2014 6:00:00 AM")
-#' clams.coll <- appendColumn(clams.coll, "TEMP.22", TRUE,
-#'                            start.str="12/24/2014 6:00:00 AM", stop.str="12/25/2014 6:00:00 AM")
 #'
 #' ## Align all VO2 measurments
 #' clams.msr <- alignMeasurement(clams.coll, "VO2")
