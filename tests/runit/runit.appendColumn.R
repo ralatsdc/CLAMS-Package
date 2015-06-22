@@ -1,4 +1,5 @@
 clams.data.a <- loadClamsFile(file.path(data.dir, "Collection-2013-01-15/2013-01-15.0101.CSV"))
+
 clams.data.b <- selectColumns(clams.data.a)
 
 .setup <- function () {

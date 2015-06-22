@@ -14,8 +14,8 @@
   \tabular{ll}{
     Package: \tab CLAMS\cr
     Type: \tab Package\cr
-    Version: \tab 2.4-0\cr
-    Date: \tab 2015-04-01\cr
+    Version: \tab 2.5\cr
+    Date: \tab 2015-06-22\cr
     License: \tab MIT + file LICENSE\cr
   }
   The Columbus Instruments Comprehensive Lab Animal Monitoring System
@@ -109,18 +109,20 @@ clams.coll <- appendColumn(clams.coll, "TEMP.22", TRUE,
 ## Align and plot oxygen consumption for each specimen
 clams.msr <- alignMeasurement(clams.coll, "VO2", c("LIGHT", "DARK", "TEMP.30", "TEMP.22"))
 plotMeasurement(clams.msr, "Oxygen Consumption, ml/kg/hr", "VO2.pdf",
-                agg.names=list(c("CRE.NEG.NH", "CRE.NEG.HL", "CRE.NEG.RL"), c("CRE.POS.HR.2", "CRE.POS.HR.4", "CRE.POS.2R")),
+                agg.names=list(c("CRE.NEG.NH", "CRE.NEG.HL", "CRE.NEG.RL"),
+                               c("CRE.POS.HR.2", "CRE.POS.HR.4", "CRE.POS.2R")),
                 agg.labels=c("CRE.NEG", "CRE.POS"),
                 con.names=c("TEMP.30", "TEMP.22"),
                 con.labels=expression(paste("30", degree, "C"), paste("22", degree, "C")),
-                do.filter=TRUE, do.error.bars=TRUE)
+                do.filter="m", do.error.bars=TRUE)
 
 ## Align and plot respiratory exchange ratio for each specimen
 clams.msr <- alignMeasurement(clams.coll, "RER", c("LIGHT", "DARK", "TEMP.30", "TEMP.22"))
 plotMeasurement(clams.msr, "Respiratory Exchange Ratio, RER", "RER.pdf",
-                agg.names=list(c("CRE.NEG.NH", "CRE.NEG.HL", "CRE.NEG.RL"), c("CRE.POS.HR.2", "CRE.POS.HR.4", "CRE.POS.2R")),
+                agg.names=list(c("CRE.NEG.NH", "CRE.NEG.HL", "CRE.NEG.RL"),
+                               c("CRE.POS.HR.2", "CRE.POS.HR.4", "CRE.POS.2R")),
                 agg.labels=c("CRE.NEG", "CRE.POS"),
                 con.names=c("TEMP.30", "TEMP.22"),
                 con.labels=expression(paste("30", degree, "C"), paste("22", degree, "C")),
-                do.filter=TRUE, do.error.bars=TRUE)
+                do.filter="m", do.error.bars=TRUE)
 }

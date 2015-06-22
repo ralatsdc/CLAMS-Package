@@ -8,6 +8,11 @@
 #' @details
 #' Translates the column name to upper case characters.
 #'
+#' The column value must have length one or the number of CLAMS data
+#' lists. If length one, the same column value is appended to each
+#' data list. Otherwise, the column value corresponding to each data
+#' list is appended.
+#'
 #' Assignment in the time interval requires that the CLAMS measurement
 #' data frame contain a date-time column. One is prepended, if
 #' needed. The start and stop time strings are optional. If absent,
@@ -56,6 +61,11 @@ appendColumn <- function(clams.list, col.name, col.value, start.str="", stop.str
   ## 
   ## See the LICENSE file or http://opensource.org/licenses/MIT.
   
+  ## Check length and mode of user provided input
+  if (!is.list(clams.list)) {
+    stop("A CLAMS data or collection list is required")
+  }
+  
   ## If the input CLAMS list is a data list, convert it to a
   ## collection list
   if (identical(names(clams.list), c("meta.data", "measurements"))) {
@@ -70,8 +80,8 @@ appendColumn <- function(clams.list, col.name, col.value, start.str="", stop.str
   if (length(col.name) != 1 || !is.character(col.name)) {
     stop("A single, character column name is required")
   }
-  if (length(col.value) != 1) {
-    stop("A single column value is required")
+  if (length(col.value) != 1 && length(col.value) != length(clams.list)) {
+    stop("The column value must have length one or the number of CLAMS data lists")
   }
   if (start.str != "" &&
       (length(start.str) != 1 || !is.character(start.str))) {
@@ -84,10 +94,18 @@ appendColumn <- function(clams.list, col.name, col.value, start.str="", stop.str
   if (length(is.daily) != 1 || !is.logical(is.daily)) {
     stop("A single, logical daily flag is required")
   }
-  
+
+  ## If the column value has length one, replicate the value
+  if (length(col.value) == 1) {
+    col.value <- rep(col.value, length(clams.list))
+  }
+
   ## Consider each data list in the collection list
   for (i.list in seq(1, length(clams.list))) {
     clams.data <- clams.list[[i.list]]
+    if (!identical(names(clams.data), c("meta.data", "measurements"))) {
+      stop("A CLAMS data or collection list is required")
+    }
     
     ## Prepend a date-time object, if one does not exist
     fmt.d <- "%m/%d/%Y"
@@ -173,17 +191,17 @@ appendColumn <- function(clams.list, col.name, col.value, start.str="", stop.str
     ## Initialize and append column, if NULL
     col.name <- toupper(col.name)
     if (is.null(clams.data$measurements[[col.name]])) {
-      clams.data$measurements[[col.name]] <- vector(mode=typeof(col.value), length(clams.d.t))
+      clams.data$measurements[[col.name]] <- vector(mode=typeof(col.value[i.list]), length(clams.d.t))
     }
     
     ## Assign input value in indicated date-time intervals
-    clams.data$measurements[[col.name]][start.d.t <= clams.d.t & clams.d.t < stop.d.t] <- col.value
+    clams.data$measurements[[col.name]][start.d.t <= clams.d.t & clams.d.t < stop.d.t] <- col.value[i.list]
     while (is.daily && stop.d.t < clams.d.t[length(clams.d.t)]) {
       
       ## Add a day's worth of seconds, and repeat assignment
       start.d.t <- start.d.t + 86400 
       stop.d.t <- stop.d.t + 86400
-      clams.data$measurements[[col.name]][start.d.t <= clams.d.t & clams.d.t < stop.d.t] <- col.value
+      clams.data$measurements[[col.name]][start.d.t <= clams.d.t & clams.d.t < stop.d.t] <- col.value[i.list]
       
     }
     

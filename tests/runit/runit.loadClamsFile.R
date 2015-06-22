@@ -1,6 +1,12 @@
 .setup <- function () {
 }
 
+test.FailsWithInvalidInput <- function () {
+  checkException(loadClamsFile(c("A.File.Name", "Another.File.Name")))
+  checkException(loadClamsFile(0.0))
+  checkException(loadClamsFile(""))
+}
+
 test.FailsWhenFileDoesNotExist <- function () {
   checkException(loadClamsFile(file.path(data.dir, "File.Does.Not.Exist.CSV")))
 }

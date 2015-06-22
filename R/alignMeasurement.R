@@ -11,9 +11,9 @@
 #'
 #' Optionally selects a subset of the measurements based on a
 #' selection named column single equality or minimum, maximum pair
-#' column value condition. By default, all measurements are inlcuded.
+#' column value condition. By default, all measurements are included.
 #'
-#' @param clams.list a CLAMS data or collection list
+#' @param clams.coll a CLAMS collection list
 #' @param msr.name the measurement column name
 #' @param lbl.names the label column names
 #' @param sel.name the selection column name
@@ -33,30 +33,24 @@
 #' ## Select columns and remove outliers
 #' clams.coll <- selectColumns(clams.coll, do.remove.outliers=TRUE)
 #'
-#' ## Append test conditions
+#' ## Append a column indicating daily periods of illumination
 #' clams.coll <- appendColumn(clams.coll, "LIGHT", TRUE,
 #'                            start.str="06:00:00 AM", stop.str="06:00:00 PM", is.daily=TRUE)
-#' clams.coll <- appendColumn(clams.coll, "DARK", TRUE,
-#'                            start.str="06:00:00 PM", stop.str="06:00:00 AM", is.daily=TRUE)
-#' clams.coll <- appendColumn(clams.coll, "TEMP.30", TRUE,
-#'                            start.str="12/21/2014 6:00:00 AM", stop.str="12/22/2014 6:00:00 AM")
-#' clams.coll <- appendColumn(clams.coll, "TEMP.22", TRUE,
-#'                            start.str="12/24/2014 6:00:00 AM", stop.str="12/25/2014 6:00:00 AM")
 #'
-#' ## Align all VO2 measurments
+#' ## Align all VO2 measurements
 #' clams.msr <- alignMeasurement(clams.coll, "VO2")
 #' 
-#' ## Align VO2 measurments including only values during periods of light
+#' ## Align VO2 measurements including only values during periods of light
 #' clams.msr <- alignMeasurement(clams.coll, "VO2", sel.name="LIGHT", sel.condition=TRUE)
 #'
-#' ## Align VO2 measurments including only values for which the
+#' ## Align VO2 measurements including only values for which the
 #' ## corresponding XTOT measurement lies in the interval (250, 750)
 #' clams.msr <- alignMeasurement(clams.coll, "VO2", sel.name="XTOT", sel.condition=c(250, 750))
 #'
-#' ## Align VO2 measurments also appending test condition LIGHT
+#' ## Align VO2 measurements also appending test condition LIGHT
 #' clams.msr <- alignMeasurement(clams.coll, "VO2", c("LIGHT"))
 
-alignMeasurement <- function(clams.list, msr.name, lbl.names=NULL, sel.name=NULL, sel.condition=NULL) {
+alignMeasurement <- function(clams.coll, msr.name, lbl.names=NULL, sel.name=NULL, sel.condition=NULL) {
 
   ## Copyright (c) 2014 Katherine B. and Raymond A. LeClair
   ## 
@@ -65,20 +59,10 @@ alignMeasurement <- function(clams.list, msr.name, lbl.names=NULL, sel.name=NULL
   ## 
   ## See the LICENSE file or http://opensource.org/licenses/MIT.
 
-  ## Initialize return value
-  clams.msr <- list()
-
-  ## If the input CLAMS list is a data list, convert it to a
-  ## collection list
-  if (identical(names(clams.list), c("meta.data", "measurements"))) {
-    is.data <- TRUE
-    clams.list <- list(DATA=clams.list)
-    
-  } else {
-    is.data <- FALSE
-  }
-  
   ## Check length and mode of user provided input
+  if (!is.list(clams.coll)) {
+    stop("A CLAMS collection list is required")
+  }
   if (length(msr.name) != 1 || !is.character(msr.name)) {
     stop("A single, character measurement name is required")
   }
@@ -104,6 +88,9 @@ alignMeasurement <- function(clams.list, msr.name, lbl.names=NULL, sel.name=NULL
     }
   }
   
+  ## Initialize return value
+  clams.msr <- list()
+
   ## Consider each CLAMS data list in order to assign measurement and
   ## label values, and measurement and common time sequences in
   ## seconds from the start of measurement
@@ -112,8 +99,14 @@ alignMeasurement <- function(clams.list, msr.name, lbl.names=NULL, sel.name=NULL
   msr.times <- list()
   com.to <- -Inf
   com.by <- +Inf
-  for (i.list in seq(1, length(clams.list))) {
-    clams.data <- clams.list[[i.list]]
+  for (i.list in seq(1, length(clams.coll))) {
+    clams.data <- clams.coll[[i.list]]
+    if (!identical(names(clams.data), c("meta.data", "measurements"))) {
+      stop("A CLAMS collection list is required")
+    }
+    if (!(msr.name %in% names(clams.data$measurements))) {
+      stop("The measurement column must be in each measurment data frame")
+    }
     
     ## If a selection name is specified, use the selection condition
     ## to assign the selected measurement and label values, otherwise,
@@ -167,8 +160,8 @@ alignMeasurement <- function(clams.list, msr.name, lbl.names=NULL, sel.name=NULL
   ## common time sequence
   com.label <- list()
   clams.msr <- list(D.T=com.time)
-  for (i.list in seq(1, length(clams.list))) {
-    clams.data <- clams.list[[i.list]]
+  for (i.list in seq(1, length(clams.coll))) {
+    clams.data <- clams.coll[[i.list]]
     msr.value <- msr.values[[i.list]]
     msr.label <- msr.labels[[i.list]]
     msr.time <- msr.times[[i.list]]

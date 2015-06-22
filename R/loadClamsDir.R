@@ -23,7 +23,7 @@
 #' clams.coll <- loadClamsDir(clams.dir)
 
 loadClamsDir <- function(data.dir) {
-
+  
   ## Copyright (c) 2014 Katherine B. and Raymond A. LeClair
   ## 
   ## This program can be redistributed and/or modified under the terms
@@ -31,6 +31,11 @@ loadClamsDir <- function(data.dir) {
   ## 
   ## See the LICENSE file or http://opensource.org/licenses/MIT.
   
+  ## Check length and mode of user provided input
+  if (length(data.dir) != 1 || !is.character(data.dir) || data.dir == "") {
+    stop("A single, character directory name is required")
+  }
+
   ## Initialize return value
   clams.coll <- list()
   

@@ -15,19 +15,31 @@
 #' vectors.
 #' 
 #' Optionally filters the measurements by applying a trailing one hour
-#' average. By default, measurements are filtered. Optionally plots
-#' error bars. By default, error bars are not plotted.
+#' average within a duration determined by the filter flag string. Set
+#' the filter flag string to "c" to filter within the duration of each
+#' condition, to "m" to filter within the duration of the
+#' measurements, or to any other value, or omit entirely, to prevent
+#' filtering. By default, measurements are not filtered.
 #'
+#' Optionally plots error bars. By default, error bars are not
+#' plotted.
+#'
+#' Optionally includes a legend at a specified location. By default, a
+#' legend is not included.
+#' 
 #' @param clams.msr aligned measurement columns
 #' @param msr.label measurement column labels
 #' @param output.file file to contain plot output
-#' @param agg.names aggregration column names
-#' @param agg.labels aggregration column labels
-#' @param agg.function aggregration function
+#' @param agg.names aggregation column names
+#' @param agg.labels aggregation column labels
+#' @param agg.function aggregation function
 #' @param con.names test condition column names
 #' @param con.labels test condition plot labels
 #' @param do.filter flag to filter measurements, or not
 #' @param do.error.bars flag to plot error bars, or not
+#' @param legend.coord position as one of "bottomright", "bottom",
+#'   "bottomleft", "left", "topleft", "top", "topright", "right" and
+#'   "center"
 #'
 #' @return
 #' A boolean indicating success, or not.
@@ -51,11 +63,11 @@
 #' clams.coll <- appendColumn(clams.coll, "TEMP.22", TRUE,
 #'                            start.str="12/24/2014 6:00:00 AM", stop.str="12/25/2014 6:00:00 AM")
 #' 
-#' ## Align oxygen consumption measurments for each specimen and append
+#' ## Align oxygen consumption measurements for each specimen and append
 #' ## test conditions
 #' clams.msr <- alignMeasurement(clams.coll, "VO2", c("LIGHT", "DARK", "TEMP.30", "TEMP.22"))
 #'
-#' ## Plot aligned measurmeents, aggregating and labeling named columns,
+#' ## Plot aligned measurements, aggregating and labeling named columns,
 #' ## labeling test conditions, filtering measurements, and plotting
 #' ## error bars
 #' plotMeasurement(clams.msr, "Oxygen Consumption, ml/kg/hr", "VO2.pdf",
@@ -64,24 +76,25 @@
 #'                 agg.labels=c("CRE.NEG", "CRE.POS"),
 #'                 con.names=c("TEMP.30", "TEMP.22"),
 #'                 con.labels=expression(paste("30", degree, "C"), paste("22", degree, "C")),
-#'                 do.filter=TRUE, do.error.bars=TRUE)
+#'                 do.filter="c", do.error.bars=TRUE, legend.coord="topleft")
 
 plotMeasurement <- function(clams.msr, msr.label, output.file, agg.names, agg.labels, agg.function=mean,
-                            con.names=NULL, con.labels=NULL, do.filter=TRUE, do.error.bars=FALSE) {
-
+                            con.names=NULL, con.labels=NULL, do.filter="n", do.error.bars=FALSE,
+                            legend.coord="") {
+  
   ## Copyright (c) 2014 Katherine B. and Raymond A. LeClair
   ## 
   ## This program can be redistributed and/or modified under the terms
   ## of the MIT License as published by the Open Source Initiative.
   ## 
   ## See the LICENSE file or http://opensource.org/licenses/MIT.
-
-  ## Initialize return value
-  status <- FALSE
-
+  
   ## Check length and mode of user provided input
+  if (!is.data.frame(clams.msr)) {
+    stop("A CLAMS measurement data frame is required")
+  }
   if (!(is.character(msr.label) || is.expression(msr.label))) {
-    stop("The measurment label must be mode 'character' or 'expression'")
+    stop("The measurement label must be mode 'character' or 'expression'")
   }
   if (length(output.file) > 1 || !is.character(output.file)) {
     stop("The output file must be mode 'character'")
@@ -123,13 +136,21 @@ plotMeasurement <- function(clams.msr, msr.label, output.file, agg.names, agg.la
       stop("Condition labels must be character or expression vectors")
     }
   }
-  if (length(do.filter) > 1 || !is.logical(do.filter)) {
-    stop("The filter flag must have mode 'logical'")
+  if (length(do.filter) > 1 || !is.character(do.filter)) {
+    stop("The filter flag must have mode 'character'")
   }
   if (length(do.error.bars) > 1 || !is.logical(do.error.bars)) {
     stop("The error bar flag must have mode 'logical'")
   }
-
+  if (! legend.coord %in% c("bottomright", "bottom", "bottomleft",
+                            "left", "topleft", "top", "topright",
+                            "right", "center", "")) {
+    stop("Unexpected legend coordinates")
+  }
+  
+  ## Initialize return value
+  status <- FALSE
+  
   ## Filter, if requested, then aggregate aligned measurement columns
   clams.sem <- list()
   d.t <- clams.msr[["D.T"]]
@@ -138,30 +159,44 @@ plotMeasurement <- function(clams.msr, msr.label, output.file, agg.names, agg.la
   for (i.an in 1 : n.an) {
     ans <- agg.names[[i.an]]
     lbl <- agg.labels[i.an]
+    
+    ## Filter the measurement to be aggregated, if requested
+    if (do.filter == "c") {
 
-    ## Filter the aggregated measurement, if requested
-    if (do.filter) {
+      ## Filter within the duration of each condition
+      n.cn <- length(con.names)
+      if (n.cn > 0) {
+        for (i.cn in 1 : n.cn) {
+          con <- con.names[i.cn]
+          idx.con <- clams.msr[[con]]
+          clams.msr[idx.con, ans] <- filter(clams.msr[idx.con, ans], rep(1, n.cf) / n.cf, method="convolution", sides=1)
+        }
+      }
+    } else if (do.filter == "m") {
+
+      ## Filter within the duration of the experiment
       clams.msr[ans] <- filter(clams.msr[ans], rep(1, n.cf) / n.cf, method="convolution", sides=1)
     }
-
+    
     ## Aggregate aligned measurement columns
     clams.msr[[lbl]] <- apply(clams.msr[ans], 1, mean)
     clams.sem[[lbl]] <- apply(clams.msr[ans], 1, sd) / sqrt(length(ans))
   }
-
+  
   ## Turn on the graphic device
   pdf(output.file, width=5.5, height=4.5)
-
+  
   ## Configure and label the axes
   yrng <- range(clams.msr[agg.labels], na.rm=TRUE)
   yint <- diff(yrng)
   ylim <- yrng + yint * c(-0.120, 0.040)
   xlim <- range(d.t / 3600)
   plot(d.t / 3600, clams.msr[[agg.labels[1]]],
-       type="l", col="white", bty="l", tcl=0.5, xpd=TRUE,
-       xaxs="r", xlim=xlim, yaxs="r", ylim=ylim,
+       type="b", col="white", bty="o", tcl=0.25, xpd=TRUE,
+       xaxs="r", xlim=xlim, xaxt="n", yaxs="r", ylim=ylim,
        xlab="Time, h", ylab=msr.label)
-  
+  axis(side=1, at=seq(xlim[1], xlim[2] + 12, 12), tcl=0.25)
+       
   ## Fill rectangles corresponding to periods of light and dark
   col <- list(LIGHT="gray98", DARK="gray92")
   int <- 1 : length(d.t)
@@ -178,28 +213,32 @@ plotMeasurement <- function(clams.msr, msr.label, output.file, agg.names, agg.la
               c(ylim[1], ylim[2], ylim[2], ylim[1]), col=col[[ilm]], border=NA)
     }
   }
-
+  
   ## Label the conditions
   yarr <- ylim[2] + yint * 0.175
   ytxt <- ylim[2] + yint * 0.200
   n.cn <- length(con.names)
-  for (i.cn in 1 : n.cn) {
-    con <- con.names[i.cn]
-    lbl <- con.labels[i.cn]
-    idx.con <- clams.msr[[con]]
-    d.t.con <- range(d.t[idx.con])
-    suppressMessages(arrows(d.t.con[1] / 3600, yarr, d.t.con[2] / 3600, yarr,
-                            length=0.10, angle=20, code=3, xpd=TRUE))
-    text(mean(d.t.con) / 3600, ytxt, pos=3, lbl, xpd=TRUE)
+  if (n.cn > 0) {
+    for (i.cn in 1 : n.cn) {
+      con <- con.names[i.cn]
+      lbl <- con.labels[i.cn]
+      idx.con <- clams.msr[[con]]
+      d.t.con <- range(d.t[idx.con])
+      suppressMessages(arrows(d.t.con[1] / 3600, yarr, d.t.con[2] / 3600, yarr,
+                              length=0.10, angle=20, code=3, xpd=TRUE))
+      text(mean(d.t.con) / 3600, ytxt, pos=3, lbl, xpd=TRUE)
+    }
   }
-
-  ## Plot the measurments, and error bars, if requested, and a legend.
-  col <- c("blue", "green", "red", "cyan", "magenta", "yellow", "black", "white")
+  
+  ## Plot the measurements, and error bars, if requested, and a legend
+  col <- c("black", "black", "black", "black", "black", "black", "black", "black")
+  bg <- c("black", "white", "grey")
   n.an <- length(agg.names)
   i.do <- 0
+  idx <- seq(1, length(d.t), n.cf)
   for (i.an in 1 : n.an) {
     lbl <- agg.labels[i.an]
-    lines(d.t / 3600, clams.msr[[lbl]], type="l", col=col[i.an])
+    lines(d.t[idx] / 3600, clams.msr[[lbl]][idx], type="o", pch= 21, col=col[i.an], bg=bg[i.an], cex=0.8)
     if (do.error.bars) {
       ym <- clams.msr[[lbl]] - clams.sem[[lbl]] / 2
       yp <- clams.msr[[lbl]] + clams.sem[[lbl]] / 2
@@ -209,8 +248,10 @@ plotMeasurement <- function(clams.msr, msr.label, output.file, agg.names, agg.la
                length=0.05, angle=90, code=3, col=col[i.an]))
     }
   }
-  legend("topleft", agg.labels, lty=rep(1, n.an), col=col[1 : n.an], inset=c(0.02, 0.02), xpd=TRUE, bty="n")
-
+  if (legend.coord != "") {
+    legend(legend.coord, agg.labels, lty=rep(1, n.an), col=col[1 : n.an], inset=c(0.02, 0.02), xpd=TRUE, bty="n")
+  }
+  
   ## Turn off the graphic device
   dev.off()
   status <- TRUE

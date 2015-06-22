@@ -47,13 +47,26 @@
 #' clams.coll <- selectColumns(clams.coll)
 #' clams.coll <- selectColumns(clams.coll, col.names=c("VO2"))
 #' clams.coll <- selectColumns(clams.coll, col.names=c("VO2"), do.remove.outliers=TRUE)
+
 selectColumns <- function(clams.list, col.names=c(), do.remove.outliers=FALSE) {
+
   ## Copyright (c) 2014 Katherine B. and Raymond A. LeClair
   ## 
   ## This program can be redistributed and/or modified under the terms
   ## of the MIT License as published by the Open Source Initiative.
   ## 
   ## See the LICENSE file or http://opensource.org/licenses/MIT.
+
+  ## Check length and mode of user provided input
+  if (!is.list(clams.list)) {
+    stop("A CLAMS data or collection list is required")
+  }
+  if (!is.null(col.names) && !is.vector(col.names, mode="character")) {
+    stop("Column names must be a character vector")
+  }
+  if (length(do.remove.outliers) > 1 || !is.logical(do.remove.outliers)) {
+    stop("The remove outliers flag must have mode 'logical'")
+  }
 
   ## If the input CLAMS list is a data list, convert it to a
   ## collection list
@@ -76,6 +89,9 @@ selectColumns <- function(clams.list, col.names=c(), do.remove.outliers=FALSE) {
   ## Consider each data list in the collection list
   for (i.list in seq(1, length(clams.list))) {
     clams.data <- clams.list[[i.list]]
+    if (!identical(names(clams.data), c("meta.data", "measurements"))) {
+      stop("A CLAMS data or collection list is required")
+    }
     
     ## Select the named columns
     clams.data$measurements <- clams.data$measurements[col.names]

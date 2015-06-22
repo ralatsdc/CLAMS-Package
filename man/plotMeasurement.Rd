@@ -6,7 +6,7 @@
 \usage{
 plotMeasurement(clams.msr, msr.label, output.file, agg.names, agg.labels,
   agg.function = mean, con.names = NULL, con.labels = NULL,
-  do.filter = TRUE, do.error.bars = FALSE)
+  do.filter = "n", do.error.bars = FALSE, legend.coord = "")
 }
 \arguments{
 \item{clams.msr}{aligned measurement columns}
@@ -15,11 +15,11 @@ plotMeasurement(clams.msr, msr.label, output.file, agg.names, agg.labels,
 
 \item{output.file}{file to contain plot output}
 
-\item{agg.names}{aggregration column names}
+\item{agg.names}{aggregation column names}
 
-\item{agg.labels}{aggregration column labels}
+\item{agg.labels}{aggregation column labels}
 
-\item{agg.function}{aggregration function}
+\item{agg.function}{aggregation function}
 
 \item{con.names}{test condition column names}
 
@@ -28,6 +28,10 @@ plotMeasurement(clams.msr, msr.label, output.file, agg.names, agg.labels,
 \item{do.filter}{flag to filter measurements, or not}
 
 \item{do.error.bars}{flag to plot error bars, or not}
+
+\item{legend.coord}{position as one of "bottomright", "bottom",
+  "bottomleft", "left", "topleft", "top", "topright", "right" and
+  "center"}
 }
 \value{
 A boolean indicating success, or not.
@@ -47,8 +51,17 @@ column and test condition labels may be character or expression
 vectors.
 
 Optionally filters the measurements by applying a trailing one hour
-average. By default, measurements are filtered. Optionally plots
-error bars. By default, error bars are not plotted.
+average within a duration determined by the filter flag string. Set
+the filter flag string to "c" to filter within the duration of each
+condition, to "m" to filter within the duration of the
+measurements, or to any other value, or omit entirely, to prevent
+filtering. By default, measurements are not filtered.
+
+Optionally plots error bars. By default, error bars are not
+plotted.
+
+Optionally includes a legend at a specified location. By default, a
+legend is not included.
 }
 \examples{
 ##  Assign and load a CLAMS data directory
@@ -69,11 +82,11 @@ clams.coll <- appendColumn(clams.coll, "TEMP.30", TRUE,
 clams.coll <- appendColumn(clams.coll, "TEMP.22", TRUE,
                            start.str="12/24/2014 6:00:00 AM", stop.str="12/25/2014 6:00:00 AM")
 
-## Align oxygen consumption measurments for each specimen and append
+## Align oxygen consumption measurements for each specimen and append
 ## test conditions
 clams.msr <- alignMeasurement(clams.coll, "VO2", c("LIGHT", "DARK", "TEMP.30", "TEMP.22"))
 
-## Plot aligned measurmeents, aggregating and labeling named columns,
+## Plot aligned measurements, aggregating and labeling named columns,
 ## labeling test conditions, filtering measurements, and plotting
 ## error bars
 plotMeasurement(clams.msr, "Oxygen Consumption, ml/kg/hr", "VO2.pdf",
@@ -82,6 +95,6 @@ plotMeasurement(clams.msr, "Oxygen Consumption, ml/kg/hr", "VO2.pdf",
                 agg.labels=c("CRE.NEG", "CRE.POS"),
                 con.names=c("TEMP.30", "TEMP.22"),
                 con.labels=expression(paste("30", degree, "C"), paste("22", degree, "C")),
-                do.filter=TRUE, do.error.bars=TRUE)
+                do.filter="c", do.error.bars=TRUE, legend.coord="topleft")
 }
 

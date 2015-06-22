@@ -3,6 +3,13 @@ clams.data.a <- loadClamsFile(file.path(data.dir, "Collection-2013-01-15/2013-01
 .setup <- function () {
 }
 
+test.FailsWithInvalidInput <- function () {
+  checkException(selectColumns(0.0))
+  checkException(selectColumns(list(), 0.0))
+  checkException(selectColumns(list(), c(""), c(TRUE, FALSE)))
+  checkException(selectColumns(list(), c(""), 0.0))
+}
+
 test.SelectsDefault <- function () {
   clams.data.b <- selectColumns(clams.data.a)
   checkEquals(names(clams.data.b$measurements),
@@ -23,7 +30,7 @@ test.SelectsAll <- function () {
 
 test.FailsWhenSelectingAbsentColumn <- function () {
   clams.data <- loadClamsFile(file.path(data.dir, "Collection-2013-01-15/2013-01-15.0101.CSV"))
-  checkException(select(clams.data, c("Col.Name.Does.Not.Exist")))
+  checkException(selectColumns(clams.data, c("Col.Name.Does.Not.Exist")))
 }
 
 test.RemovesOutliers <- function () {

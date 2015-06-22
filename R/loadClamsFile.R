@@ -40,6 +40,11 @@ loadClamsFile <- function(input.file) {
   ## 
   ## See the LICENSE file or http://opensource.org/licenses/MIT.
   
+  ## Check length and mode of user provided input
+  if (length(input.file) != 1 || !is.character(input.file) || input.file == "") {
+    stop("A single, character input file name is required")
+  }
+
   ## Initialize return value
   meta.data <- list()
   measurements <- data.frame()

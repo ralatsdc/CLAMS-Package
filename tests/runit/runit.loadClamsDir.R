@@ -1,6 +1,12 @@
 .setup <- function () {
 }
 
+test.FailsWithInvalidInput <- function () {
+  checkException(loadClamsDir(c("A.Dir.Name", "Another.Dir.Name")))
+  checkException(loadClamsDir(0.0))
+  checkException(loadClamsDir(""))
+}
+
 test.FailsWhenDirDoesNotExist <- function () {
   checkException(loadClamsDir(file.path(data.dir, "Dir.Does.Not.Exist")))
 }

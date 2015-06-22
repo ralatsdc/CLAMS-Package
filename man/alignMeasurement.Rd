@@ -4,11 +4,11 @@
 \alias{alignMeasurement}
 \title{Aligns measurement columns}
 \usage{
-alignMeasurement(clams.list, msr.name, lbl.names = NULL, sel.name = NULL,
+alignMeasurement(clams.coll, msr.name, lbl.names = NULL, sel.name = NULL,
   sel.condition = NULL)
 }
 \arguments{
-\item{clams.list}{a CLAMS data or collection list}
+\item{clams.coll}{a CLAMS collection list}
 
 \item{msr.name}{the measurement column name}
 
@@ -34,7 +34,7 @@ plotting. By default, label columns are not included.
 
 Optionally selects a subset of the measurements based on a
 selection named column single equality or minimum, maximum pair
-column value condition. By default, all measurements are inlcuded.
+column value condition. By default, all measurements are included.
 }
 \examples{
 ## Assign and load a CLAMS data directory
@@ -45,27 +45,21 @@ clams.coll <- loadClamsDir(clams.dir)
 ## Select columns and remove outliers
 clams.coll <- selectColumns(clams.coll, do.remove.outliers=TRUE)
 
-## Append test conditions
+## Append a column indicating daily periods of illumination
 clams.coll <- appendColumn(clams.coll, "LIGHT", TRUE,
                            start.str="06:00:00 AM", stop.str="06:00:00 PM", is.daily=TRUE)
-clams.coll <- appendColumn(clams.coll, "DARK", TRUE,
-                           start.str="06:00:00 PM", stop.str="06:00:00 AM", is.daily=TRUE)
-clams.coll <- appendColumn(clams.coll, "TEMP.30", TRUE,
-                           start.str="12/21/2014 6:00:00 AM", stop.str="12/22/2014 6:00:00 AM")
-clams.coll <- appendColumn(clams.coll, "TEMP.22", TRUE,
-                           start.str="12/24/2014 6:00:00 AM", stop.str="12/25/2014 6:00:00 AM")
 
-## Align all VO2 measurments
+## Align all VO2 measurements
 clams.msr <- alignMeasurement(clams.coll, "VO2")
 
-## Align VO2 measurments including only values during periods of light
+## Align VO2 measurements including only values during periods of light
 clams.msr <- alignMeasurement(clams.coll, "VO2", sel.name="LIGHT", sel.condition=TRUE)
 
-## Align VO2 measurments including only values for which the
+## Align VO2 measurements including only values for which the
 ## corresponding XTOT measurement lies in the interval (250, 750)
 clams.msr <- alignMeasurement(clams.coll, "VO2", sel.name="XTOT", sel.condition=c(250, 750))
 
-## Align VO2 measurments also appending test condition LIGHT
+## Align VO2 measurements also appending test condition LIGHT
 clams.msr <- alignMeasurement(clams.coll, "VO2", c("LIGHT"))
 }
 

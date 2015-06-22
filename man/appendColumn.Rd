@@ -38,6 +38,11 @@ CLAMS collection list.
 \details{
 Translates the column name to upper case characters.
 
+The column value must have length one or the number of CLAMS data
+lists. If length one, the same column value is appended to each
+data list. Otherwise, the column value corresponding to each data
+list is appended.
+
 Assignment in the time interval requires that the CLAMS measurement
 data frame contain a date-time column. One is prepended, if
 needed. The start and stop time strings are optional. If absent,
