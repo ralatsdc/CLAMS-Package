@@ -31,6 +31,8 @@ test.adjustMeasurement <- function () {
   }
 }
 
+## TODO: Add test for Inf removal
+
 test.ReturnsClamsDataOrCollection <- function () {
   clams.coll.b <- adjustMeasurement(clams.coll.a, "VO2")
   checkEquals(names(clams.coll.b), c("2015-01-06.0101.CSV",

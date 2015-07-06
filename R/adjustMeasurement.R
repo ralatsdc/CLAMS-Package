@@ -97,6 +97,9 @@ adjustMeasurement <- function(clams.list, msr.name) {
         clams.data$measurements$ORIG.WEIGHT *
           clams.data$measurements$ADJ.WEIGHT
 
+    ## Eliminate Infs
+    clams.data$measurements[[adj.name]][clams.data$measurements[[adj.name]] == Inf] <- NA
+
     clams.list[[i.list]] <- clams.data
   }
 
