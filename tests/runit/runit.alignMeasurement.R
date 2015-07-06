@@ -47,7 +47,7 @@ test.AlignsMeasurments <- function () {
   n.data <- length(clams.msr.a[[gsub(" ", ".", clams.data.a$meta.data$subject.id)]])
   checkEquals(clams.msr.a[[gsub(" ", ".", clams.data.a$meta.data$subject.id)]][seq(1, n.data, 2)],
               clams.msr.a[[gsub(" ", ".", clams.data.b$meta.data$subject.id)]][seq(1, n.data, 2)])
-  checkTrue(all(clams.msr.a[[gsub(" ", ".", clams.data.b$meta.data$subject.id)]][seq(2, n.data, 2)] == 0))
+  checkTrue(all(is.na(clams.msr.a[[gsub(" ", ".", clams.data.b$meta.data$subject.id)]][seq(2, n.data, 2)])))
 }
 
 .teardown <- function () {

@@ -31,9 +31,9 @@ elements:
 \item{measurements}{a data frame of measurements}
 }
 \description{
-Appends a named column value in a time interval to the measurements
-data frame of a CLAMS data list or of each CLAMS data list in a
-CLAMS collection list.
+Appends a named column value in a closed time interval to the
+measurements data frame of a CLAMS data list or of each CLAMS data
+list in a CLAMS collection list.
 }
 \details{
 Translates the column name to upper case characters.

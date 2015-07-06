@@ -1,9 +1,9 @@
 #' @title Appends a named column value in a time interval
 #'
 #' @description
-#' Appends a named column value in a time interval to the measurements
-#' data frame of a CLAMS data list or of each CLAMS data list in a
-#' CLAMS collection list.
+#' Appends a named column value in a closed time interval to the
+#' measurements data frame of a CLAMS data list or of each CLAMS data
+#' list in a CLAMS collection list.
 #'
 #' @details
 #' Translates the column name to upper case characters.
@@ -192,16 +192,19 @@ appendColumn <- function(clams.list, col.name, col.value, start.str="", stop.str
     col.name <- toupper(col.name)
     if (is.null(clams.data$measurements[[col.name]])) {
       clams.data$measurements[[col.name]] <- vector(mode=typeof(col.value[i.list]), length(clams.d.t))
+      if (mode(col.value[i.list]) == "numeric") {
+        clams.data$measurements[[col.name]][clams.data$measurements[[col.name]] == 0] <- NA
+      }
     }
-    
+
     ## Assign input value in indicated date-time intervals
-    clams.data$measurements[[col.name]][start.d.t <= clams.d.t & clams.d.t < stop.d.t] <- col.value[i.list]
-    while (is.daily && stop.d.t < clams.d.t[length(clams.d.t)]) {
+    clams.data$measurements[[col.name]][start.d.t <= clams.d.t & clams.d.t <= stop.d.t] <- col.value[i.list]
+    while (is.daily && stop.d.t <= clams.d.t[length(clams.d.t)]) {
       
       ## Add a day's worth of seconds, and repeat assignment
       start.d.t <- start.d.t + 86400 
       stop.d.t <- stop.d.t + 86400
-      clams.data$measurements[[col.name]][start.d.t <= clams.d.t & clams.d.t < stop.d.t] <- col.value[i.list]
+      clams.data$measurements[[col.name]][start.d.t <= clams.d.t & clams.d.t <= stop.d.t] <- col.value[i.list]
       
     }
     

@@ -1,7 +1,7 @@
 Package: CLAMS
 Type: Package
 Title: Performs CLAMS Data Analysis
-Version: 2.5
+Version: 2.5.3
 Date: 2015-07-06
 Author: Katherine and Raymond LeClair
 Maintainer: Raymond LeClair <raymond.leclair@gmail.com>

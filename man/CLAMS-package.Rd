@@ -14,7 +14,7 @@
   \tabular{ll}{
     Package: \tab CLAMS\cr
     Type: \tab Package\cr
-    Version: \tab 2.5\cr
+    Version: \tab 2.5.3\cr
     Date: \tab 2015-07-06\cr
     License: \tab MIT + file LICENSE\cr
   }

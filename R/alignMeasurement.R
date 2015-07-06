@@ -170,9 +170,15 @@ alignMeasurement <- function(clams.coll, msr.name, lbl.names=NULL, sel.name=NULL
     ## interval in which the measurement was collected, with equality
     ## at the earlier time
     com.value <- vector(mode=typeof(msr.value), n.com)
+    if (mode(msr.value) == "numeric") {
+      com.value[com.value == 0] <- NA
+    }
     if (length(com.label) == 0) {
       for (lbl.name in lbl.names) {
         com.label[[lbl.name]] <- vector(mode=typeof(msr.label[[lbl.name]]), n.com)
+        if (mode(msr.label[[lbl.name]]) == "numeric") {
+          com.label[[lbl.name]][com.label[[lbl.name]] == 0] <- NA
+        }
       }
     }
     n.msr <- length(msr.value)

@@ -66,15 +66,14 @@ test.AcceptsOnlyValidStopStrs <- function () {
   n.data <- length(clams.data.c$measurements$D.T)
 
   ## Uses the measurement stop time
-  checkTrue(clams.data.c$measurements$LIGHT[n.data - 1])
-  checkTrue(!clams.data.c$measurements$LIGHT[n.data])
+  checkTrue(clams.data.c$measurements$LIGHT[n.data])
 
   ## Uses the measurement start date with stop time of day
   stop.str <- format(strptime(clams.data.b$measurements$DATE.TIME[6], "%m/%d/%Y %I:%M:%S %p"), "%I:%M:%S %p")
   clams.data.c <- appendColumn(clams.data.b, "light", TRUE, stop.str=stop.str)
   checkTrue(clams.data.c$measurements$LIGHT[4])
   checkTrue(clams.data.c$measurements$LIGHT[5])
-  checkTrue(!clams.data.c$measurements$LIGHT[6])
+  checkTrue(clams.data.c$measurements$LIGHT[6])
   checkTrue(!clams.data.c$measurements$LIGHT[7])
   checkTrue(!clams.data.c$measurements$LIGHT[8])
 
@@ -83,7 +82,7 @@ test.AcceptsOnlyValidStopStrs <- function () {
   clams.data.c <- appendColumn(clams.data.b, "light", TRUE, stop.str=stop.str)
   checkTrue(clams.data.c$measurements$LIGHT[58])
   checkTrue(clams.data.c$measurements$LIGHT[59])
-  checkTrue(!clams.data.c$measurements$LIGHT[60])
+  checkTrue(clams.data.c$measurements$LIGHT[60])
   checkTrue(!clams.data.c$measurements$LIGHT[61])
   checkTrue(!clams.data.c$measurements$LIGHT[62])
 
@@ -126,9 +125,9 @@ test.AppendsColumn <- function () {
   clams.data.d <- appendColumn(clams.data.c, "double", 1.0)
   clams.data.e <- appendColumn(clams.data.d, "character", "a")
   n.data = length(clams.data.b$measurements$DATE.TIME)
-  checkEquals(clams.data.c$measurements$BOOLEAN, c(rep(TRUE, n.data - 1), FALSE))
-  checkEquals(clams.data.d$measurements$DOUBLE, c(rep(1.0, n.data - 1), 0.0))
-  checkEquals(clams.data.e$measurements$CHARACTER, c(rep("a", n.data - 1), ""))
+  checkEquals(clams.data.c$measurements$BOOLEAN, c(rep(TRUE, n.data)))
+  checkEquals(clams.data.d$measurements$DOUBLE, c(rep(1.0, n.data)))
+  checkEquals(clams.data.e$measurements$CHARACTER, c(rep("a", n.data)))
 }
 
 test.ReturnsClamsDataOrCollection <- function () {
