@@ -47,6 +47,8 @@
 #' clams.coll <- selectColumns(clams.coll)
 #' clams.coll <- selectColumns(clams.coll, col.names=c("VO2"))
 #' clams.coll <- selectColumns(clams.coll, col.names=c("VO2"), do.remove.outliers=TRUE)
+#'
+#' @export
 
 selectColumns <- function(clams.list, col.names=c(), do.remove.outliers=FALSE) {
 

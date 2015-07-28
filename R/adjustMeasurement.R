@@ -40,6 +40,8 @@
 #'
 #' ## Adjust VO2 measurements
 #' clams.coll <- adjustMeasurement(clams.coll, "VO2")
+#'
+#' @export
 
 adjustMeasurement <- function(clams.list, msr.name) {
 

@@ -1,4 +1,4 @@
-#' @title Aligns measurement columns
+t#' @title Aligns measurement columns
 #'
 #' @description
 #' Aligns a measurement column from the measurements data frame of
@@ -49,6 +49,8 @@
 #'
 #' ## Align VO2 measurements also appending test condition LIGHT
 #' clams.msr <- alignMeasurement(clams.coll, "VO2", c("LIGHT"))
+#'
+#' @export
 
 alignMeasurement <- function(clams.coll, msr.name, lbl.names=NULL, sel.name=NULL, sel.condition=NULL) {
 
@@ -105,7 +107,7 @@ alignMeasurement <- function(clams.coll, msr.name, lbl.names=NULL, sel.name=NULL
       stop("A CLAMS collection list is required")
     }
     if (!(msr.name %in% names(clams.data$measurements))) {
-      stop("The measurement column must be in each measurment data frame")
+      stop("The measurement column must be in each measurement data frame")
     }
     
     ## If a selection name is specified, use the selection condition

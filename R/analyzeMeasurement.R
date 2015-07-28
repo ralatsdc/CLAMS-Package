@@ -67,6 +67,8 @@
 #'   
 #' ## Analyze heat production
 #' clams.analysis <- analyzeMeasurement(clams.coll, "HEAT", sel.name="TEMP.22", sel.condition=TRUE)
+#'
+#' @export
 
 analyzeMeasurement <- function(
   clams.coll, msr.name, mdl.formula=NULL, sel.name=NULL, sel.condition=NULL, agg.functions=NULL) {
@@ -196,7 +198,7 @@ analyzeMeasurement <- function(
   clams.analysis$model <- aov(mdl.formula, clams.analysis$data)
 
   ## Construct the corresponding effects object
-  clams.analysis$effect <- effect("GENOTYPE", clams.analysis$model)
+  clams.analysis$effect <- effects::effect("GENOTYPE", clams.analysis$model)
 
   clams.analysis
 }

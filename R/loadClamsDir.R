@@ -21,6 +21,8 @@
 #'
 #' ## Load a CLAMS data directory
 #' clams.coll <- loadClamsDir(clams.dir)
+#'
+#' @export
 
 loadClamsDir <- function(data.dir) {
   

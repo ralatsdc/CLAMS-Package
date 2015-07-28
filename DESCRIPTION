@@ -1,12 +1,12 @@
 Package: CLAMS
 Type: Package
 Title: Performs CLAMS Data Analysis
-Version: 2.5.3
-Date: 2015-07-06
+Version: 2.5.4
+Date: 2015-07-28
 Author: Katherine and Raymond LeClair
 Maintainer: Raymond LeClair <raymond.leclair@gmail.com>
 Depends: R (>= 3.1.3)
-Imports: effects
+Imports: effects, zoo
 Suggests: RUnit
 Description: Provides functions for analyzing data produced by the
   Columbus Instruments Comprehensive Lab Animal Monitoring System

@@ -14,8 +14,8 @@
   \tabular{ll}{
     Package: \tab CLAMS\cr
     Type: \tab Package\cr
-    Version: \tab 2.5.3\cr
-    Date: \tab 2015-07-06\cr
+    Version: \tab 2.5.4\cr
+    Date: \tab 2015-07-28\cr
     License: \tab MIT + file LICENSE\cr
   }
   The Columbus Instruments Comprehensive Lab Animal Monitoring System

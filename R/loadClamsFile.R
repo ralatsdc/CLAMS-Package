@@ -30,6 +30,8 @@
 #'
 #' ## Load a CLAMS data file
 #' clams.data <- loadClamsFile(clams.file)
+#'
+#' @export
 
 loadClamsFile <- function(input.file) {
 

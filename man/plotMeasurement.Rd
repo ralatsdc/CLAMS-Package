@@ -5,7 +5,7 @@
 \title{Plots aligned measurement columns}
 \usage{
 plotMeasurement(clams.msr, msr.label, output.file, agg.names, agg.labels,
-  agg.function = mean, con.names = NULL, con.labels = NULL,
+  con.names = NULL, con.labels = NULL, do.remove.outliers = FALSE,
   do.filter = "n", do.error.bars = FALSE, legend.coord = "")
 }
 \arguments{
@@ -19,11 +19,11 @@ plotMeasurement(clams.msr, msr.label, output.file, agg.names, agg.labels,
 
 \item{agg.labels}{aggregation column labels}
 
-\item{agg.function}{aggregation function}
-
 \item{con.names}{test condition column names}
 
 \item{con.labels}{test condition plot labels}
+
+\item{do.remove.outliers}{flag to remove outliers, or not}
 
 \item{do.filter}{flag to filter measurements, or not}
 
@@ -39,16 +39,19 @@ A boolean indicating success, or not.
 \description{
 Plots aligned measurement columns from the measurements data frame
 of each CLAMS data list in a CLAMS collection list as a function of
-a common time sequence in seconds.
+a common time sequence in seconds. Optionally, removes outliers.
 }
 \details{
 Places PDF commands needed for the plot in output.file.
 
-Aggregates named measurement columns as labeled columns using an
-aggregation function, by default using \code{mean}. Optionally
-plots and labels named test conditions. Note that measurement
-column and test condition labels may be character or expression
-vectors.
+Aggregates named measurement columns as labeled columns using the
+\code{mean}. Optionally plots and labels named test
+conditions. Note that measurement column and test condition labels
+may be character or expression vectors.
+
+By default outliers are not removed. If \code{do.remove.outliers}
+is \code{TRUE}, values greater than three standard deviations from
+the mean are removed within the duration of each condition.
 
 Optionally filters the measurements by applying a trailing one hour
 average within a duration determined by the filter flag string. Set

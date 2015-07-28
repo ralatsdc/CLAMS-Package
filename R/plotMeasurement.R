@@ -3,16 +3,19 @@
 #' @description
 #' Plots aligned measurement columns from the measurements data frame
 #' of each CLAMS data list in a CLAMS collection list as a function of
-#' a common time sequence in seconds.
+#' a common time sequence in seconds. Optionally, removes outliers.
 #'
 #' @details
 #' Places PDF commands needed for the plot in output.file.
 #' 
-#' Aggregates named measurement columns as labeled columns using an
-#' aggregation function, by default using \code{mean}. Optionally
-#' plots and labels named test conditions. Note that measurement
-#' column and test condition labels may be character or expression
-#' vectors.
+#' Aggregates named measurement columns as labeled columns using the
+#' \code{mean}. Optionally plots and labels named test
+#' conditions. Note that measurement column and test condition labels
+#' may be character or expression vectors.
+#' 
+#' By default outliers are not removed. If \code{do.remove.outliers}
+#' is \code{TRUE}, values greater than three standard deviations from
+#' the mean are removed within the duration of each condition.
 #' 
 #' Optionally filters the measurements by applying a trailing one hour
 #' average within a duration determined by the filter flag string. Set
@@ -32,9 +35,9 @@
 #' @param output.file file to contain plot output
 #' @param agg.names aggregation column names
 #' @param agg.labels aggregation column labels
-#' @param agg.function aggregation function
 #' @param con.names test condition column names
 #' @param con.labels test condition plot labels
+#' @param do.remove.outliers flag to remove outliers, or not
 #' @param do.filter flag to filter measurements, or not
 #' @param do.error.bars flag to plot error bars, or not
 #' @param legend.coord position as one of "bottomright", "bottom",
@@ -77,10 +80,13 @@
 #'                 con.names=c("TEMP.30", "TEMP.22"),
 #'                 con.labels=expression(paste("30", degree, "C"), paste("22", degree, "C")),
 #'                 do.filter="c", do.error.bars=TRUE, legend.coord="topleft")
+#'
+#' @export
 
-plotMeasurement <- function(clams.msr, msr.label, output.file, agg.names, agg.labels, agg.function=mean,
-                            con.names=NULL, con.labels=NULL, do.filter="n", do.error.bars=FALSE,
-                            legend.coord="") {
+plotMeasurement <- function(clams.msr, msr.label, output.file, agg.names, agg.labels,
+                            con.names=NULL, con.labels=NULL, do.remove.outliers=FALSE, do.filter="n",
+                            do.error.bars=FALSE, legend.coord="") {
+  
   
   ## Copyright (c) 2014 Katherine B. and Raymond A. LeClair
   ## 
@@ -92,6 +98,9 @@ plotMeasurement <- function(clams.msr, msr.label, output.file, agg.names, agg.la
   ## Check length and mode of user provided input
   if (!is.data.frame(clams.msr)) {
     stop("A CLAMS measurement data frame is required")
+  }
+  if (length(setdiff(c("LIGHT", "DARK"), names(clams.msr))) != 0) {
+    stop("The CLAMS measurement data frame must contain a 'LIGHT' and 'DARK' column")
   }
   if (!(is.character(msr.label) || is.expression(msr.label))) {
     stop("The measurement label must be mode 'character' or 'expression'")
@@ -117,9 +126,6 @@ plotMeasurement <- function(clams.msr, msr.label, output.file, agg.names, agg.la
   if (length(agg.names) != length(agg.labels)) {
     stop("Aggregation names and labels must have equal length")
   }
-  if (length(agg.function) > 1 || !is.function(agg.function)) {
-    stop("The aggregation function must be a function")
-  }
   if (!is.null(con.names)) {
     if (is.null(con.labels)) {
       stop("Condition names and labels must be specified together")
@@ -136,6 +142,9 @@ plotMeasurement <- function(clams.msr, msr.label, output.file, agg.names, agg.la
       stop("Condition labels must be character or expression vectors")
     }
   }
+  if (length(do.remove.outliers) > 1 || !is.logical(do.remove.outliers)) {
+    stop("The remove outliers flag must have mode 'logical'")
+  }
   if (length(do.filter) > 1 || !is.character(do.filter)) {
     stop("The filter flag must have mode 'character'")
   }
@@ -151,6 +160,28 @@ plotMeasurement <- function(clams.msr, msr.label, output.file, agg.names, agg.la
   ## Initialize return value
   status <- FALSE
   
+  ## Remove outliers within the duration of each condition, if requested
+  msr.names <- setdiff(names(clams.msr), c("D.T", "LIGHT", "DARK", con.names))
+  if (do.remove.outliers) {
+    n.cn <- length(con.names)
+    if (n.cn > 0) {
+      for (i.cn in 1 : n.cn) {
+        con <- con.names[i.cn]
+        idx.con <- clams.msr[[con]]
+        for (msr.name in msr.names) {
+          mn.msr <- mean(clams.msr[[msr.name]], na.rm=TRUE)
+          sd.msr <- sd(clams.msr[[msr.name]], na.rm=TRUE)
+          clams.msr[[msr.name]][clams.msr[[msr.name]] < mn.msr - 3 * sd.msr] <- NA
+          clams.msr[[msr.name]][mn.msr + 3 * sd.msr < clams.msr[[msr.name]]] <- NA
+        }
+      }
+    }
+  }
+
+  ## Replace each NA with the most recent non-NA prior to it for each
+  ## measurement column
+  clams.msr[msr.names] <- zoo::na.locf(clams.msr[msr.names])
+
   ## Filter, if requested, then aggregate aligned measurement columns
   clams.sem <- list()
   d.t <- clams.msr[["D.T"]]
@@ -169,13 +200,18 @@ plotMeasurement <- function(clams.msr, msr.label, output.file, agg.names, agg.la
         for (i.cn in 1 : n.cn) {
           con <- con.names[i.cn]
           idx.con <- clams.msr[[con]]
-          clams.msr[idx.con, ans] <- filter(clams.msr[idx.con, ans], rep(1, n.cf) / n.cf, method="convolution", sides=1)
+          ## Note that NAs are handled by earlier replacing them with
+          ## the previous value with the result that the filter
+          ## weights are still exactly correct
+          clams.msr[idx.con, ans] <- filter(clams.msr[idx.con, ans], rep(1, n.cf) / n.cf,
+                                            method="convolution", sides=1)
         }
       }
     } else if (do.filter == "m") {
 
       ## Filter within the duration of the experiment
-      clams.msr[ans] <- filter(clams.msr[ans], rep(1, n.cf) / n.cf, method="convolution", sides=1)
+      clams.msr[ans] <- filter(clams.msr[ans], rep(1, n.cf) / n.cf,
+                               method="convolution", sides=1)
     }
     
     ## Aggregate aligned measurement columns
@@ -224,32 +260,42 @@ plotMeasurement <- function(clams.msr, msr.label, output.file, agg.names, agg.la
       lbl <- con.labels[i.cn]
       idx.con <- clams.msr[[con]]
       d.t.con <- range(d.t[idx.con])
-      suppressMessages(arrows(d.t.con[1] / 3600, yarr, d.t.con[2] / 3600, yarr,
-                              length=0.10, angle=20, code=3, xpd=TRUE))
+      suppressMessages(
+        arrows(d.t.con[1] / 3600, yarr, d.t.con[2] / 3600, yarr,
+               length=0.10, angle=20, code=3, xpd=TRUE)
+      )
       text(mean(d.t.con) / 3600, ytxt, pos=3, lbl, xpd=TRUE)
     }
   }
   
   ## Plot the measurements, and error bars, if requested, and a legend
   col <- c("black", "black", "black", "black", "black", "black", "black", "black")
+  pch <- c(21, 21, 21)
   bg <- c("black", "white", "grey")
   n.an <- length(agg.names)
   i.do <- 0
   idx <- seq(1, length(d.t), n.cf)
   for (i.an in 1 : n.an) {
     lbl <- agg.labels[i.an]
-    lines(d.t[idx] / 3600, clams.msr[[lbl]][idx], type="o", pch= 21, col=col[i.an], bg=bg[i.an], cex=0.8)
+    ## Note that NAs are handled by earlier replacing them with the
+    ## previous value with the result that the indexed value is valid
+    ## with the correct mean and standard error of the mean
+    lines(d.t[idx] / 3600, clams.msr[[lbl]][idx],
+          type="o", pch=pch[i.an], col=col[i.an], bg=bg[i.an], cex=0.8)
     if (do.error.bars) {
       ym <- clams.msr[[lbl]] - clams.sem[[lbl]] / 2
       yp <- clams.msr[[lbl]] + clams.sem[[lbl]] / 2
       int <- seq(n.cf + (i.an - 1) * n.cf, length(d.t), 2 * n.cf)
       suppressWarnings(
         arrows(d.t[int] / 3600, ym[int], d.t[int] / 3600, yp[int],
-               length=0.05, angle=90, code=3, col=col[i.an]))
+               length=0.05, angle=90, code=3, col=col[i.an])
+      )
     }
   }
   if (legend.coord != "") {
-    legend(legend.coord, agg.labels, lty=rep(1, n.an), col=col[1 : n.an], inset=c(0.02, 0.02), xpd=TRUE, bty="n")
+    legend(legend.coord, agg.labels,
+           lty=rep(1, n.an), pch=pch[1 : n.an], col=col[1 : n.an], pt.bg=bg[1 : n.an],
+           inset=c(0.02, 0.02), xpd=TRUE, bty="n")
   }
   
   ## Turn off the graphic device
